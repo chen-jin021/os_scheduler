@@ -9,7 +9,7 @@ void report_row(int n) {
     printf("Cycle\t");
     int i;
     for (i = 0; i < n; i++) {
-        printf("P%d State\t\t", i);
+        printf("P%d State\t\t", i + 1);
     }
     printf("Comment\n");
 }
@@ -64,13 +64,13 @@ void fifo_scheduling(p* processes, int n) {
             } else {  // done
                 printf("\t\t\t");
             }
-            // comment
-            if (pos == 0) {
-                printf("CPU IDLE");
-            }
-            // next cycle
-            cycle++;
-            printf("\n");
         }
+        // comment
+        if (pos == 0) {
+            printf("CPU IDLE");
+        }
+        // next cycle
+        cycle++;
+        printf("\n");
     }
 }
