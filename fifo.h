@@ -19,12 +19,15 @@ void fifo_scheduling(p* processes, int n) {
     report_row(n);
     int isDone = 0;
     int cycle = 0;
-    int i = 0;
+    int i;
+    int firstCycle = 1;
 
     while (isDone != n) {
         int pos = queue[start];
         processes[pos - 1].state = RUNNING;
-        printf("%d\t", cycle + 1);
+        // next cycle
+        cycle++;
+        printf("%d\t", cycle);
         for (i = 0; i < n; i++) {
             // total_time of the current time element
             int process_current = processes[i].current;
@@ -66,11 +69,12 @@ void fifo_scheduling(p* processes, int n) {
             }
         }
         // comment
-        if (pos == 0) {
+        if (firstCycle) {
+            firstCycle = 0;
+            printf("Processes Created; P1 wins tiebreak");
+        } else if (pos == 0) {
             printf("CPU IDLE");
         }
-        // next cycle
-        cycle++;
         printf("\n");
     }
 }
