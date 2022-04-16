@@ -3,7 +3,7 @@
 #include <string.h>
 
 // if instruction is fifo
-void fifo_scheduling(int n) {
+void rr_scheduling(int n, int q) {
     // TODO
-    printf("Enter FIFO");
+    printf("Entering RR");
 }
