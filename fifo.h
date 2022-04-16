@@ -3,8 +3,74 @@
 #include <string.h>
 
 #include "process.h"
+#include "queue.h"
+
+void report_row(int n) {
+    printf("Cycle\t");
+    int i;
+    for (i = 0; i < n; i++) {
+        printf("P%d State\t\t", i);
+    }
+    printf("Comment\n");
+}
 
 // if instruction is fifo
 void fifo_scheduling(p* processes, int n) {
-    // printf("Enter FIFO %d", processes->state);
+    report_row(n);
+    int isDone = 0;
+    int cycle = 0;
+    int i = 0;
+
+    while (isDone != n) {
+        int pos = queue[start];
+        processes[pos - 1].state = RUNNING;
+        printf("%d\t", cycle + 1);
+        for (i = 0; i < n; i++) {
+            // total_time of the current time element
+            int process_current = processes[i].current;
+            int current_counter = processes[i].counter;
+            int total_time = processes[i].time[process_current];
+            int process_state = processes[i].state;
+            // running and the state is not terminating
+            if (process_state == RUNNING && process_current != 4) {
+                processes[i].counter++;
+                printf("Run (%d of %d)\t\t", current_counter + 1, total_time);
+                // check if the current state has reached (turn to next state)
+                if (current_counter == total_time - 1) {
+                    // reset counter, add current + 1
+                    // change the state from running to blocking
+                    processes[i].counter = 0;
+                    processes[i].current++;
+                    processes[i].state = BLOCKED;
+                    pop();
+                }
+            } else if (process_state == READY) {
+                printf("Ready\t\t\t");
+            } else if (process_state == BLOCKED) {
+                processes[i].counter++;
+                printf("Blocked (%d of %d)\t", current_counter, total_time);
+                if (current_counter == total_time - 1) {  // change state
+                    processes[i].counter = 0;             // reset counter
+                    processes[i].state = READY;
+                    processes[i].current++;
+                    push(i + 1);
+                }
+            } else if (process_state == RUNNING && process_current == 4) {
+                // this process turn to run and ready to terminate
+                printf("Terminate\t\t");
+                isDone++;  // add one process to done list
+                processes[i].state = DONE;
+                pop();
+            } else {  // done
+                printf("\t\t\t");
+            }
+            // comment
+            if (pos == 0) {
+                printf("CPU IDLE");
+            }
+            // next cycle
+            cycle++;
+            printf("\n");
+        }
+    }
 }

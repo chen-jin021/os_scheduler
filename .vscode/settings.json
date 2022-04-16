@@ -3,6 +3,8 @@
 		"locale": "c",
 		"string": "c",
 		"fifo.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"__tuple": "c",
+		"array": "c"
 	}
 }

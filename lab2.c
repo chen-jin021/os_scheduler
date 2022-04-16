@@ -6,16 +6,14 @@
 #include <string.h>
 
 #include "fifo.h"
+#include "queue.h"
 #include "round_robin.h"
 #endif
-
-#define MAX 1025
-#define READY 1
 
 void initializer() {
     int n;
     int sa;
-    int q = MAX;
+    int q;
     // ask for processes
     printf("Enter number of processes: ");
     scanf("%d", &n);
@@ -27,18 +25,23 @@ void initializer() {
     // define an array of processes
     int i, j;
     p processes[n];
+
     for (i = 0; i < n; i++) {
         // initialize each process
         processes[i].counter = 0;
         processes[i].state = READY;
+        processes[i].current = 0;
         for (j = 0; j < 4; j++) {
             if (j % 2 == 0) {
-                processes[i].time[j] = 3;
+                printf("Enter R%d time: ", j);
+                scanf("%d", &processes[i].time[j]);
             } else {
-                processes[i].time[j] = 2;
+                printf("Enter B%d time: ", j);
+                scanf("%d", &processes[i].time[j]);
             }
         }
         processes[i].time[5] = 1;  // termination 1 milisec
+        push(i + 1);
     }
 
     switch (sa) {
