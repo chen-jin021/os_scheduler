@@ -5,6 +5,9 @@
 		"fifo.h": "c",
 		"stdlib.h": "c",
 		"__tuple": "c",
-		"array": "c"
+		"array": "c",
+		"memory": "c",
+		"utility": "c",
+		"type_traits": "c"
 	}
 }

@@ -42,6 +42,7 @@ void initializer() {
         }
         processes[i].time[5] = 1;  // termination 1 milisec
         push(i + 1);
+        switcher[i] = 1;
     }
 
     switch (sa) {
