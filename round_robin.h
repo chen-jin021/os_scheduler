@@ -36,23 +36,23 @@ void rr_scheduling(p* processes, int n, int q) {
             for (int i = 0; i < n; i++) {
                 if (processes[i].state == RUNNING) {
                     processes[i].counter++;
-                    if (processes[i].current == 0 || processes[i].current == 2)
+                    if (processes[i].current == 0 || processes[i].current == 2) {  // R
                         printf("Run (%d of %d)\t\t", processes[i].counter, processes[i].time[processes[i].current]);
-                    else if (processes[i].current == 1 || processes[i].current == 3)
+                    } else if (processes[i].current == 1 || processes[i].current == 3) {  // B
                         printf("Blocked  (%d of %d)\t", processes[i].counter, processes[i].time[processes[i].current]);
-                    else if (st[i] == 0) {
+                    } else if (st[i] == 0) {  // neither running nor blocking (terminating)
                         printf("Terminate\t\t");
                         isDone++;
                         st[i] = 1;
                         processes[i].state = DONE;
-                    } else if (st[i] == 1) {
+                    } else if (st[i] == 1) {  // terminated
                         printf("\t\t\t");
                     }
-                    if (processes[i].current != 4 && processes[i].counter == processes[i].time[processes[i].current] - 1) {
+                    // once the R/B process has been completed, move to the next R/B [not terminating]
+                    if (processes[i].current != 4 && processes[i].counter == processes[i].time[processes[i].current]) {
                         processes[i].counter = 0;
                         processes[i].current++;
                     }
-
                     if (processes[i].current == 1 || processes[i].current == 3 || processes[i].current == 4) {
                         newCycle = 1;
                     }
@@ -61,7 +61,8 @@ void rr_scheduling(p* processes, int n, int q) {
                 } else if (processes[i].state == BLOCKED) {
                     processes[i].counter++;
                     printf("Blocked  (%d of %d)\t", processes[i].counter, processes[i].time[processes[i].current]);
-                    if (processes[i].counter == processes[i].time[processes[i].current] - 1) {
+                    if (processes[i].counter == processes[i].time[processes[i].current]) {
+                        // reset and move to next
                         processes[i].counter = 0;
                         processes[i].current++;
                         processes[i].state = READY;
@@ -69,15 +70,16 @@ void rr_scheduling(p* processes, int n, int q) {
                 } else if (processes[i].state == DONE)
                     printf("\t\t\t");
             }
-
-            if (pos != -1 && beforeP != -1 && t == 1 && processes[beforeP].state == READY && processes[beforeP].time[processes[beforeP].current - 1] != 1) {
+            // processes[beforeP].time[processes[beforeP].current] != 1 for not terminating
+            if (pos != -1 && beforeP != -1 && t == 1 && processes[beforeP].state == READY && processes[beforeP].time[processes[beforeP].current] != 1) {
                 printf("P%d preempted\t", beforeP + 1);
             }
             if (pos == -1) {
                 printf("CPU idle\t");
                 beforeP = -1;
-            } else
+            } else {
                 beforeP = pos;
+            }
             if (cycle == 1) {
                 printf("Both created; P1 wins tiebreak\t");
             }
@@ -87,12 +89,13 @@ void rr_scheduling(p* processes, int n, int q) {
                 break;
         }
         if (pos != -1 && processes[pos].state != DONE) {
-            if (processes[pos].current == 1 || processes[pos].current == 3) {
+            // new cycle if current is RUNNING, turn into READY
+            if (processes[pos].current == 0 || processes[pos].current == 2) {
                 processes[pos].state = READY;
-            } else if (processes[pos].current == 2 || processes[pos].current == 4)
-                processes[pos].state = BLOCKED;
+            } else if (processes[pos].current == 1 || processes[pos].current == 3)
+                processes[pos].state = BLOCKED;  // if BLOCKED, then BLOCKED
         }
-        for (int i = 1; i <= n; i++) {
+        for (int i = 0; i < n; i++) {
             if (processes[i].state == READY && switcher[i] == 0) {
                 push(i + 1);
                 switcher[i] = 1;

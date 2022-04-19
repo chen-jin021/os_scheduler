@@ -40,7 +40,7 @@ void initializer() {
                 scanf("%d", &processes[i].time[j]);
             }
         }
-        processes[i].time[5] = 1;  // termination 1 milisec
+        processes[i].time[4] = 1;  // termination 1 milisec
         push(i + 1);
         switcher[i] = 1;
     }
